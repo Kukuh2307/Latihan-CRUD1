@@ -138,7 +138,45 @@ if(isset($_POST["simpan"])) {
     <div class="card">
       <h5 class="card-header text-white bg-secondary">Tampilan</h5>
       <div class="card-body">
-
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">NIM</th>
+              <th scope="col">Nama</th>
+              <th scope="col">Alamat</th>
+              <th scope="col">Fakultas</th>
+              <th scope="col">Option</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php 
+            // menampilkan data yang sudah di input oleh user
+            $query2 = "SELECT * FROM mahasiswa ORDER BY id DESC";
+            $output = mysqli_query($koneksi,$query2);
+            $idx = 1;
+            while($looping = mysqli_fetch_array($output)){
+              $nim = $looping["nim"];
+              $nama = $looping["nama"];
+              $alamat = $looping["alamat"];
+              $fakultas = $looping["fakultas"];
+              ?>
+            <tr>
+              <th scope="row"><?php echo $idx++ ?></th>
+              <th scope="row"><?php echo $nim ?></th>
+              <th scope="row"><?php echo $nama ?></th>
+              <th scope="row"><?php echo $alamat ?></th>
+              <th scope="row"><?php echo $fakultas ?></th>
+              <th scope="row">
+                <button class="btn btn-warning">Ubah</button>
+                <button class="btn btn-danger">Hapus</button>
+              </th>
+            </tr>
+            <?php
+            }
+            ?>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
