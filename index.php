@@ -19,10 +19,21 @@ if(isset($_GET["op"])){
 } else{
   $op = "";
 }
+// untuk menhapus data
+if($op =="delete"){
+  $id = $_GET["id"];
+  $query5 = "DELETE FROM mahasiswa WHERE id='$id'";
+  $delete = mysqli_query($koneksi,$query5);
+  if($delete){
+    $sukses = "data berhasil di hapus";
+  } else{
+    $gagal = "data gagal di hapus";
+  }
+}
 
 // apabila tombol ubah di tekan
 if($op == "edit") {
-  $id = $_GET["id"];
+  $id = $_GET["idx"];
   $query3 = "SELECT * FROM mahasiswa WHERE id ='$id'";
   $select = mysqli_query($koneksi,$query3);
   // menampilkan data yng di select
@@ -31,9 +42,9 @@ if($op == "edit") {
   $nama = $output2["nama"];
   $alamat = $output2["alamat"];
   $fakultas = $output2["fakultas"];
-}
-if($nim == "") {
-  $gagal = "data tidak di temukan";
+  if($nim == "") {
+    $gagal = "data tidak di temukan";
+  }
 }
 
 // apabila tombol submit telah di tekan
@@ -110,6 +121,10 @@ if(isset($_POST["simpan"])) {
             ?>
         </div>
         <?php
+        // untuk merefresh browser setelah muncul alert
+        // header(
+        //   "refresh:5;url=index.php"
+        // );
         }
 
         // apabila data berhasi di tambahkan
@@ -121,6 +136,10 @@ if(isset($_POST["simpan"])) {
             ?>
         </div>
         <?php
+        // untuk merefresh browser setelah muncul alert
+        // header(
+        //   "refresh:5;url=index.php"
+        // );
         }
         ?>
 
@@ -192,21 +211,24 @@ if(isset($_POST["simpan"])) {
             $output = mysqli_query($koneksi,$query2);
             $idx = "";
             while($looping = mysqli_fetch_array($output)){
+              $idx++;
               $nim = $looping["nim"];
               $nama = $looping["nama"];
               $alamat = $looping["alamat"];
               $fakultas = $looping["fakultas"];
               ?>
             <tr>
-              <th scope="row"><?php echo $idx++ ?></th>
+              <th scope="row"><?php echo $idx ?></th>
               <th scope="row"><?php echo $nim ?></th>
               <th scope="row"><?php echo $nama ?></th>
               <th scope="row"><?php echo $alamat ?></th>
               <th scope="row"><?php echo $fakultas ?></th>
               <th scope="row">
-                <a href="index.php?op=edit&id=<?php echo $idx ?>"><button class="btn btn-warning"
+                <a href="index.php?op=edit&idx=<?php echo $idx ?>"><button class="btn btn-warning"
                     name="edit">Edit</button></a>
-                <button class="btn btn-danger">Hapus</button>
+                <a href="index.php?op?delete&idx=<?php echo $idx ?>"
+                  onclick="return confirm('yakin mau menghapus data??')"><button
+                    class="btn btn-danger">Hapus</button></a>
               </th>
             </tr>
             <?php
