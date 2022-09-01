@@ -22,7 +22,7 @@ if(isset($_GET["op"])){
 // untuk menhapus data
 if($op =="delete"){
   $id = $_GET["id"];
-  $query5 = "DELETE FROM mahasiswa WHERE id='$id'";
+  $query5 = "DELETE FROM mahasiswa WHERE id ='$id'";
   $delete = mysqli_query($koneksi,$query5);
   if($delete){
     $sukses = "data berhasil di hapus";
@@ -33,7 +33,7 @@ if($op =="delete"){
 
 // apabila tombol ubah di tekan
 if($op == "edit") {
-  $id = $_GET["idx"];
+  $id = $_GET["id"];
   $query3 = "SELECT * FROM mahasiswa WHERE id ='$id'";
   $select = mysqli_query($koneksi,$query3);
   // menampilkan data yng di select
@@ -122,9 +122,9 @@ if(isset($_POST["simpan"])) {
         </div>
         <?php
         // untuk merefresh browser setelah muncul alert
-        // header(
-        //   "refresh:5;url=index.php"
-        // );
+        header(
+          "refresh:5;url=index.php"
+        );
         }
 
         // apabila data berhasi di tambahkan
@@ -137,9 +137,9 @@ if(isset($_POST["simpan"])) {
         </div>
         <?php
         // untuk merefresh browser setelah muncul alert
-        // header(
-        //   "refresh:5;url=index.php"
-        // );
+        header(
+          "refresh:5;url=index.php"
+        );
         }
         ?>
 
@@ -207,11 +207,12 @@ if(isset($_POST["simpan"])) {
           <tbody>
             <?php 
             // menampilkan data yang sudah di input oleh user
-            $query2 = "SELECT * FROM mahasiswa ORDER BY id DESC";
+            $query2 = "SELECT * FROM mahasiswa ORDER BY id ASC";
             $output = mysqli_query($koneksi,$query2);
             $idx = "";
             while($looping = mysqli_fetch_array($output)){
               $idx++;
+              $id = $looping["id"];
               $nim = $looping["nim"];
               $nama = $looping["nama"];
               $alamat = $looping["alamat"];
@@ -224,9 +225,9 @@ if(isset($_POST["simpan"])) {
               <th scope="row"><?php echo $alamat ?></th>
               <th scope="row"><?php echo $fakultas ?></th>
               <th scope="row">
-                <a href="index.php?op=edit&idx=<?php echo $idx ?>"><button class="btn btn-warning"
+                <a href="index.php?op=edit&id=<?php echo $id ?>"><button class="btn btn-warning"
                     name="edit">Edit</button></a>
-                <a href="index.php?op?delete&idx=<?php echo $idx ?>"
+                <a href="index.php?op=delete&id=<?php echo $id ?>"
                   onclick="return confirm('yakin mau menghapus data??')"><button
                     class="btn btn-danger">Hapus</button></a>
               </th>
