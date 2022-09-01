@@ -13,6 +13,29 @@ $fakultas="";
 $sukses ="";
 $gagal = "";
 
+// mengecek apakah ada data yang di ubah
+if(isset($_GET["op"])){
+  $op = $_GET["op"];
+} else{
+  $op = "";
+}
+
+// apabila tombol ubah di tekan
+if($op == "edit") {
+  $id = $_GET["id"];
+  $query3 = "SELECT * FROM mahasiswa WHERE id ='$id'";
+  $select = mysqli_query($koneksi,$query3);
+  // menampilkan data yng di select
+  $output2 = mysqli_fetch_assoc($select);
+  $nim = $output2["nim"];
+  $nama = $output2["nama"];
+  $alamat = $output2["alamat"];
+  $fakultas = $output2["fakultas"];
+}
+if($nim == "") {
+  $gagal = "data tidak di temukan";
+}
+
 // apabila tombol submit telah di tekan
 // maka ambil element2 yang ada di dalammnya
 if(isset($_POST["simpan"])) {
@@ -23,14 +46,27 @@ if(isset($_POST["simpan"])) {
 
   // dan apabila semua element telah terisi maka masukkan ke dalam database
   if($nim && $nama && $alamat && $fakultas) {
-    $query1 = "INSERT INTO mahasiswa(nim,nama,alamat,fakultas) values('$nim','$nama','$alamat','$fakultas')";
-    $inputdata = mysqli_query($koneksi,$query1);
-
-    // cek apakah data sudah di input untuk menampilkan keterangan
-    if($inputdata){
-      $sukses = "data berhasil di tambahkan";
-    } else{
-      $gagal = "data gagal di tambahkan";
+    // jika data sudah di edit dan selanjutnya di lakukan proses simpan data ke database
+    if($op == "edit") {
+      $query4 = "UPDATE mahasiswa SET nim = '$nim',nama = '$nama',alamat ='$alamat',fakultas ='$fakultas' WHERE id = '$id'";
+      $update = mysqli_query($koneksi,$query4);
+      // apabila data berhasil di update
+      if($update){
+        $sukses = "data berhasil di update";
+      } else{
+        $gagal = "data gagal di update";
+      }
+    } else {
+      // jika op selain edit berarti akan di anggap memasukkan data
+      $query1 = "INSERT INTO mahasiswa(nim,nama,alamat,fakultas) values('$nim','$nama','$alamat','$fakultas')";
+      $inputdata = mysqli_query($koneksi,$query1);
+  
+      // cek apakah data sudah di input untuk menampilkan keterangan
+      if($inputdata){
+        $sukses = "data berhasil di tambahkan";
+      } else{
+        $gagal = "data gagal di tambahkan";
+      }
     }
   } else{
     $gagal = "Silahkan masukkan data anda dengan lengkap";
@@ -154,7 +190,7 @@ if(isset($_POST["simpan"])) {
             // menampilkan data yang sudah di input oleh user
             $query2 = "SELECT * FROM mahasiswa ORDER BY id DESC";
             $output = mysqli_query($koneksi,$query2);
-            $idx = 1;
+            $idx = "";
             while($looping = mysqli_fetch_array($output)){
               $nim = $looping["nim"];
               $nama = $looping["nama"];
@@ -168,7 +204,8 @@ if(isset($_POST["simpan"])) {
               <th scope="row"><?php echo $alamat ?></th>
               <th scope="row"><?php echo $fakultas ?></th>
               <th scope="row">
-                <button class="btn btn-warning">Ubah</button>
+                <a href="index.php?op=edit&id=<?php echo $idx ?>"><button class="btn btn-warning"
+                    name="edit">Edit</button></a>
                 <button class="btn btn-danger">Hapus</button>
               </th>
             </tr>
